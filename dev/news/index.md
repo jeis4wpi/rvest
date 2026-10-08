@@ -1,0 +1,429 @@
+# Changelog
+
+## rvest (development version)
+
+- Functions deprecated in rvest 1.0.0 have been removed: `set_values()`,
+  `submit_form()`, `xml_tag()`, `xml_node()`, `xml_nodes()`, `back()`,
+  `forward()`, `jump_to()`, `follow_link()`, `html_session()`,
+  `guess_encoding()`, and `repair_encoding()`.
+  [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  and `LiveHTML` are no longer experimental.
+- [`html_form()`](https://rvest.tidyverse.org/dev/reference/html_form.md)
+  now defaults a missing `action` attribute to the URL of the document,
+  following the HTML5 spec, so forms without an `action` can be
+  submitted ([\#319](https://github.com/tidyverse/rvest/issues/319)).
+- [`html_form_submit()`](https://rvest.tidyverse.org/dev/reference/html_form.md)
+  now only submits checked checkboxes and radio buttons (not all of
+  them), and
+  [`html_form_set()`](https://rvest.tidyverse.org/dev/reference/html_form.md)
+  now sets the checked state of checkbox and radio button fields instead
+  of their values
+  ([\#316](https://github.com/tidyverse/rvest/issues/316)).
+- [`html_form_submit()`](https://rvest.tidyverse.org/dev/reference/html_form.md)
+  once again supports file uploads: file fields set to
+  [`httr::upload_file()`](https://httr.r-lib.org/reference/upload_file.html)
+  objects are no longer mangled into strings
+  ([\#320](https://github.com/tidyverse/rvest/issues/320)).
+- [`html_table()`](https://rvest.tidyverse.org/dev/reference/html_table.md)
+  now always warns when `fill` is supplied; previously `fill = TRUE` was
+  silently accepted, so many packages never saw the deprecation.
+- [`html_text2()`](https://rvest.tidyverse.org/dev/reference/html_text.md)
+  now converts `<br>` to a line break when it is nested inside an inline
+  element like `<span>`
+  ([\#351](https://github.com/tidyverse/rvest/issues/351)). It also no
+  longer includes the text of HTML comments.
+- `LiveHTML$click()` gains a `method` argument: `method = "js"` fires a
+  JavaScript click event that works on hidden elements, and clicking an
+  element that isn’t clickable with the mouse now gives an informative
+  error ([\#431](https://github.com/tidyverse/rvest/issues/431)).
+- `LiveHTML` gains a `$select()` method for selecting options from a
+  `<select>` dropdown, either by value or by visible text
+  ([\#411](https://github.com/tidyverse/rvest/issues/411)).
+- [`read_html()`](https://rvest.tidyverse.org/dev/reference/read_html.md)
+  can now read an httr2 response directly
+  ([\#406](https://github.com/tidyverse/rvest/issues/406)).
+- [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  gains a `timeout` argument to control how long to wait for the initial
+  page load, which is useful when using slow proxies
+  ([\#427](https://github.com/tidyverse/rvest/issues/427)).
+- [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  gains `mode` and `view` arguments to optionally run Chrome with a
+  visible window or with a mobile viewport, and headless mode now
+  defaults to `--headless=new`
+  ([\#407](https://github.com/tidyverse/rvest/issues/407),
+  [\#438](https://github.com/tidyverse/rvest/issues/438)).
+- [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  now hides common tells of an automated browser
+  (e.g. `navigator.webdriver` and the `HeadlessChrome` user agent),
+  making it less likely to be blocked by bot detection
+  ([\#407](https://github.com/tidyverse/rvest/issues/407)).
+- [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  now shares a single browser across all sessions (one per `mode`), so
+  repeated calls no longer pay the cost of launching Chrome each time;
+  use the new `browser` argument to supply your own browser instead.
+- [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  now correctly handles `xpath` expressions containing single quotes
+  ([\#435](https://github.com/tidyverse/rvest/issues/435)).
+- [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  now errors immediately if the page fails to load (e.g. the domain
+  doesn’t exist) instead of hanging.
+- [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  objects now return the correct nodes when selecting `<html>`,
+  `<head>`, or `<body>`, so printing shows `<head>` and `<body>` rather
+  than their children
+  ([\#396](https://github.com/tidyverse/rvest/issues/396)).
+
+## rvest 1.0.5
+
+CRAN release: 2025-08-29
+
+- Fixes `LiveHTML` objects returning ‘could not find node with given id’
+  errors if a page navigation occurred after a `$click()` event
+  ([\#405](https://github.com/tidyverse/rvest/issues/405)).
+
+- New example vignette displays the same starwars data but rendered
+  dynamically using JS, so you need to use
+  [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  to get the data.
+
+## rvest 1.0.4
+
+CRAN release: 2024-02-12
+
+- New
+  [`read_html_live()`](https://rvest.tidyverse.org/dev/reference/read_html_live.md)
+  reads HTML into a real, live, HTML browser, meaning that you can
+  scrape HTML generated by javascript. It returns a `LiveHTML` object
+  which you can also use to simulate user interactions with the page,
+  like clicking, typing, and scrolling
+  ([\#245](https://github.com/tidyverse/rvest/issues/245)).
+
+- [`html_table()`](https://rvest.tidyverse.org/dev/reference/html_table.md)
+  discards rows without cells ([@epiben](https://github.com/epiben),
+  [\#360](https://github.com/tidyverse/rvest/issues/360)).
+
+## rvest 1.0.3
+
+CRAN release: 2022-08-19
+
+- Re-document to fix HTML issues in `.Rd`.
+
+## rvest 1.0.2
+
+CRAN release: 2021-10-16
+
+- Fixes for CRAN
+
+- [`html_table()`](https://rvest.tidyverse.org/dev/reference/html_table.md)
+  converts empty tables to empty tibbles
+  ([@epiben](https://github.com/epiben),
+  [\#327](https://github.com/tidyverse/rvest/issues/327)).
+
+## rvest 1.0.1
+
+CRAN release: 2021-07-26
+
+- [`html_table()`](https://rvest.tidyverse.org/dev/reference/html_table.md)
+  correctly handles tables with cells that contain blank values for
+  `rowspan` and/or `colspan`, so that e.g. `<td rowspan="">` is parsed
+  as `<td rowspan=1>` ([@epiben](https://github.com/epiben),
+  [\#323](https://github.com/tidyverse/rvest/issues/323)).
+
+- Fix broken example
+
+## rvest 1.0.0
+
+CRAN release: 2021-03-09
+
+### New features
+
+- New
+  [`html_text2()`](https://rvest.tidyverse.org/dev/reference/html_text.md)
+  provides a more natural rendering of HTML nodes into text, converting
+  `<br>` into “”, and removing non-significant whitespace
+  ([\#175](https://github.com/tidyverse/rvest/issues/175)). By default,
+  it also converts `&nbsp;` into regular spaces, which you can suppress
+  with `preserve_nbsp = TRUE`
+  ([\#284](https://github.com/tidyverse/rvest/issues/284)).
+
+- [`html_table()`](https://rvest.tidyverse.org/dev/reference/html_table.md)
+  has been re-written from scratch to more closely mimic the algorithm
+  that browsers use for parsing tables. This should mean that there are
+  far fewer tables for which it fails to produce some output
+  ([\#63](https://github.com/tidyverse/rvest/issues/63),
+  [\#204](https://github.com/tidyverse/rvest/issues/204),
+  [\#215](https://github.com/tidyverse/rvest/issues/215)). The `fill`
+  argument has been deprecated since it is no longer needed.
+  [`html_table()`](https://rvest.tidyverse.org/dev/reference/html_table.md)
+  now returns a tibble rather than a data frame to be compatible with
+  the rest of the tidyverse
+  ([\#199](https://github.com/tidyverse/rvest/issues/199)). Its
+  performance has been considerably improved
+  ([\#237](https://github.com/tidyverse/rvest/issues/237)). It also
+  gains a `na.strings` argument to control what values are converted to
+  `NA` ([\#107](https://github.com/tidyverse/rvest/issues/107)), and a
+  `convert` argument to control whether to run the conversion
+  ([\#311](https://github.com/tidyverse/rvest/issues/311)).
+
+- New
+  [`html_form_submit()`](https://rvest.tidyverse.org/dev/reference/html_form.md)
+  allows you to submit a form directly, without needing to create a
+  session ([\#300](https://github.com/tidyverse/rvest/issues/300)).
+
+- rvest is now licensed as MIT
+  ([\#287](https://github.com/tidyverse/rvest/issues/287)).
+
+### API changes
+
+Since this is the 1.0.0 release, I included a large number of API
+changes to make rvest more compatible with current tidyverse
+conventions. Older functions have been deprecated, so existing code will
+continue to work (albeit with a few new warnings).
+
+- rvest now imports xml2 rather than depending on it. This is cleaner
+  because it avoids attaching all the xml2 functions that you’re less
+  likely to use. To reduce the change of breakages, rvest re-exports
+  xml2 functions
+  [`read_html()`](https://rvest.tidyverse.org/dev/reference/read_html.md)
+  and
+  [`url_absolute()`](http://xml2.r-lib.org/reference/url_absolute.md),
+  but your code may now need an explicit
+  [`library(xml2)`](https://xml2.r-lib.org).
+
+- [`html_form()`](https://rvest.tidyverse.org/dev/reference/html_form.md)
+  now returns an object with class `rvest_form` (instead of form).
+  Fields within a form now have class `rvest_field`, instead of a
+  variety of classes that were lacking the `rvest_` prefix. All
+  functions for working with forms have a common `html_form_` prefix:
+  `set_values()` became
+  [`html_form_set()`](https://rvest.tidyverse.org/dev/reference/html_form.md).
+  `submit_form()` was renamed to
+  [`session_submit()`](https://rvest.tidyverse.org/dev/reference/session.md)
+  because it returns a session.
+
+- [`html_node()`](https://rvest.tidyverse.org/dev/reference/rename.md)
+  and
+  [`html_nodes()`](https://rvest.tidyverse.org/dev/reference/rename.md)
+  have been superseded in favor of
+  [`html_element()`](https://rvest.tidyverse.org/dev/reference/html_element.md)
+  and
+  [`html_elements()`](https://rvest.tidyverse.org/dev/reference/html_element.md)
+  since they (almost) always return elements, not nodes
+  ([\#298](https://github.com/tidyverse/rvest/issues/298)).
+
+- `html_session()` is now
+  [`session()`](https://rvest.tidyverse.org/dev/reference/session.md)
+  and returns an object of class `rvest_session` (instead of `session`).
+  All functions that work with session objects now have a common
+  `session_` prefix.
+
+- Long deprecated `html()`, `html_tag()`, `xml()` functions have been
+  removed.
+
+- [`minimal_html()`](https://rvest.tidyverse.org/dev/reference/minimal_html.md)
+  (which doesn’t appear to be used by any other package) has had its
+  arguments flipped to make it more intuitive.
+
+- `guess_encoding()` has been renamed to
+  [`html_encoding_guess()`](https://rvest.tidyverse.org/dev/reference/html_encoding_guess.md)
+  to avoid a clash with `stringr::guess_encoding()`
+  ([\#209](https://github.com/tidyverse/rvest/issues/209)).
+  `repair_encoding()` has been deprecated because it doesn’t appear to
+  work.
+
+- `pluck()` is no longer exported to avoid a clash with
+  [`purrr::pluck()`](https://purrr.tidyverse.org/reference/pluck.html);
+  if you need it use
+  [`purrr::map_chr()`](https://purrr.tidyverse.org/reference/map.html)
+  and friends instead
+  ([\#209](https://github.com/tidyverse/rvest/issues/209)).
+
+- `xml_tag()`, `xml_node()`, and `xml_nodes()` have been formally
+  deprecated in favor of their `html_` equivalents.
+
+### Minor improvements and bug fixes
+
+- The “harvesting the web” vignette has been rewritten to focus more on
+  basics rvest, eliminating the screenshots to keep the installed
+  package as svelte as possible. It’s also been renamed to
+  [`vignette("rvest")`](https://rvest.tidyverse.org/dev/articles/rvest.md)
+  since it’s the vignette that you should read first.
+
+- The SelectorGadget vignette is now a web-only article,
+  <https://rvest.tidyverse.org/articles/articles/selectorgadget.html>,
+  so we can be more generous with screenshots since they’re no longer
+  bundled with every install of the package. Together with the rewrite
+  of the other vignette, this means that rvest is now ~90 Kb instead of
+  ~1.1 Mb.
+
+- All uses of IMDB have been eliminated since the site explicitly
+  prohibits scraping
+  ([\#195](https://github.com/tidyverse/rvest/issues/195)).
+
+- [`session_submit()`](https://rvest.tidyverse.org/dev/reference/session.md)
+  errors if `form` doesn’t have a `url`
+  ([\#288](https://github.com/tidyverse/rvest/issues/288)).
+
+- New
+  [`session_forward()`](https://rvest.tidyverse.org/dev/reference/session.md)
+  function to complement
+  [`session_back()`](https://rvest.tidyverse.org/dev/reference/session.md).
+  It now allows you to pick the submission button by position
+  ([\#156](https://github.com/tidyverse/rvest/issues/156)). The `...`
+  argument is deprecated; please use `config` instead.
+
+- [`html_form_set()`](https://rvest.tidyverse.org/dev/reference/html_form.md)
+  can now accept character vectors allowing you to select multiple
+  checkboxes in a set or select multiple values from a multi-`<select>`
+  ([\#127](https://github.com/tidyverse/rvest/issues/127), with help
+  from [@juba](https://github.com/juba)). It also uses dynamic dots so
+  that you can use `!!!` if you have a list of values
+  ([\#189](https://github.com/tidyverse/rvest/issues/189)).
+
+## rvest 0.3.6
+
+CRAN release: 2020-07-25
+
+- Remove failing example
+
+## rvest 0.3.5
+
+CRAN release: 2019-11-08
+
+- Use web archive to fix broken example.
+
+## rvest 0.3.4
+
+CRAN release: 2019-05-15
+
+- Remove unneeded `read_xml.response()` method
+  ([\#242](https://github.com/tidyverse/rvest/issues/242)).
+
+## rvest 0.3.3
+
+CRAN release: 2019-04-11
+
+- Fix `R CMD check` failure
+
+- `submit_request()` now checks for empty form-field-types to select the
+  correct submit fields ([@rentrop](https://github.com/rentrop),
+  [\#159](https://github.com/tidyverse/rvest/issues/159))
+
+## rvest 0.3.2
+
+CRAN release: 2016-06-17
+
+- Fixes to `follow_link()` and `back()` to correctly manage session
+  history.
+
+- If you’re using xml2 1.0.0,
+  [`html_node()`](https://rvest.tidyverse.org/dev/reference/rename.md)
+  will now return a “missing node”.
+
+- Parse rowspans and colspans effectively by filling using repetition
+  from left to right (for colspan) and top to bottom (rowspan)
+  ([\#111](https://github.com/tidyverse/rvest/issues/111))
+
+- Updated a few examples and demos where the website structure has
+  changed.
+
+- Made compatible with both xml2 0.1.2 and 1.0.0.
+
+## rvest 0.3.1
+
+CRAN release: 2015-11-11
+
+- Fix invalid link for SSA example.
+
+- Parse `<options>` that don’t have value attribute
+  ([\#85](https://github.com/tidyverse/rvest/issues/85)).
+
+- Remove all remaining uses of `html()` in favor of
+  [`read_html()`](https://rvest.tidyverse.org/dev/reference/read_html.md)
+  ([@jimhester](https://github.com/jimhester),
+  [\#113](https://github.com/tidyverse/rvest/issues/113)).
+
+## rvest 0.3.0
+
+CRAN release: 2015-09-23
+
+- rvest has been rewritten to take advantage of the new xml2 package.
+  xml2 provides a fresh binding to libxml2, avoiding many of the
+  work-arounds previously needed for the XML package. Now rvest depends
+  on the xml2 package, so all the xml functions are available, and rvest
+  adds a thin wrapper for html.
+
+- A number of functions have change names. The old versions still work,
+  but are deprecated and will be removed in rvest 0.4.0.
+
+  - `html_tag()` -\>
+    [`html_name()`](https://rvest.tidyverse.org/dev/reference/html_name.md)
+  - `html()` -\>
+    [`read_html()`](https://rvest.tidyverse.org/dev/reference/read_html.md)
+
+- [`html_node()`](https://rvest.tidyverse.org/dev/reference/rename.md)
+  now throws an error if there are no matches, and a warning if there’s
+  more than one match. I think this should make it more likely to fail
+  clearly when the structure of the page changes.
+
+- `xml_structure()` has been moved to xml2. New `html_structure()` (also
+  in xml2) highlights id and class attributes
+  ([\#78](https://github.com/tidyverse/rvest/issues/78)).
+
+- `submit_form()` now works with forms that use GET
+  ([\#66](https://github.com/tidyverse/rvest/issues/66)).
+
+- `submit_request()` (and hence `submit_form()`) is now
+  case-insensitive, and so will find `<input type=SUBMIT>` as well
+  as`<input type="submit">`.
+
+- `submit_request()` (and hence `submit_form()`) recognizes forms with
+  `<input type="image">` as a valid form submission button.
+
+## rvest 0.2.0
+
+CRAN release: 2015-01-01
+
+### New features
+
+- `html()` and `xml()` pass `...` on to
+  [`httr::GET()`](https://httr.r-lib.org/reference/GET.html) so you can
+  more finely control the request
+  ([\#48](https://github.com/tidyverse/rvest/issues/48)).
+
+- Add xml support: parse with `xml()`, then work with using
+  `xml_node()`, `xml_attr()`, `xml_attrs()`, `xml_text()` and
+  `xml_tag()` ([\#24](https://github.com/tidyverse/rvest/issues/24)).
+
+- `xml_structure()`: new function that displays the structure (i.e. tag
+  and attribute names) of a xml/html object
+  ([\#10](https://github.com/tidyverse/rvest/issues/10)).
+
+### Bug fixes
+
+- `follow_link()` now accepts css and xpath selectors.
+  ([\#38](https://github.com/tidyverse/rvest/issues/38),
+  [\#41](https://github.com/tidyverse/rvest/issues/41),
+  [\#42](https://github.com/tidyverse/rvest/issues/42))
+
+- `html()` does a better job of dealing with encodings (passing the
+  problem on to `XML::parseHTML()`) instead of trying to do it itself
+  ([\#25](https://github.com/tidyverse/rvest/issues/25),
+  [\#50](https://github.com/tidyverse/rvest/issues/50)).
+
+- [`html_attr()`](https://rvest.tidyverse.org/dev/reference/html_attr.md)
+  returns default value when input is NULL
+  ([\#49](https://github.com/tidyverse/rvest/issues/49))
+
+- Add missing
+  [`html_node()`](https://rvest.tidyverse.org/dev/reference/rename.md)
+  method for session.
+
+- [`html_nodes()`](https://rvest.tidyverse.org/dev/reference/rename.md)
+  now returns an empty list if no elements are found
+  ([\#31](https://github.com/tidyverse/rvest/issues/31)).
+
+- `submit_form()` converts relative paths to absolute URLs
+  ([\#52](https://github.com/tidyverse/rvest/issues/52)). It also deals
+  better with 0-length inputs
+  ([\#29](https://github.com/tidyverse/rvest/issues/29)).
